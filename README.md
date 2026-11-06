@@ -2,6 +2,8 @@
 
 一份持續擴充的電腦科學知識圖鑑。每個概念都用相同的結構解釋：Overview → Intuition → How It Works → Implementation → Complexity → Common Mistakes，並連結到相關的知識頁面。
 
+**線上網站：https://yueteng9511.github.io/nexus/**
+
 - **靜態網站**：Astro 7 + TypeScript，部署在 GitHub Pages，不需要後端。
 - **內容與 UI 分離**：知識內容寫在 Markdown，新增一篇文章只需要新增一個 `.md` 檔。
 - **規則可執行**：內容格式、段落結構、站內連結、C++ 範例都有自動檢查。
