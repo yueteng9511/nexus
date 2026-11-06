@@ -1,0 +1,4 @@
+name: Programming
+code: PRG
+description: 語言特性與寫程式的基本功：C++ 語法、記憶體管理、STL 與除錯。
+order: 4

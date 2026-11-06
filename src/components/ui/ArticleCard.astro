@@ -1,0 +1,98 @@
+---
+/**
+ * 文章卡片：全站唯一的「文章預覽」元件。
+ *   variant="card"：有邊框的卡片（首頁 Featured、相關文章）
+ *   variant="row" ：列表的一列（分類頁、首頁 Recently Added），可顯示日期
+ * 需要新的文章預覽樣式時，優先在這裡加 variant，不要另建元件。
+ */
+import CategoryCode from './CategoryCode.astro';
+import DifficultyBadge from './DifficultyBadge.astro';
+import { formatDate, type Article, type Category } from '../../lib/content';
+import { articleUrl } from '../../lib/url';
+
+interface Props {
+  article: Article;
+  /** 傳入時顯示分類代號（在分類頁內可省略，避免重複） */
+  category?: Category;
+  variant?: 'card' | 'row';
+  showDate?: boolean;
+}
+
+const { article, category, variant = 'card', showDate = false } = Astro.props;
+const { title, description, difficulty, publishedAt } = article.data;
+---
+
+<a class:list={['article-card', variant]} href={articleUrl(article.id)}>
+  <div class="meta">
+    {category && <CategoryCode code={category.data.code} />}
+    <DifficultyBadge level={difficulty} />
+    {showDate && <time datetime={formatDate(publishedAt)}>{formatDate(publishedAt)}</time>}
+  </div>
+  <h3 class="title">{title}</h3>
+  <p class="description">{description}</p>
+</a>
+
+<style>
+  .article-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    transition: border-color var(--duration-fast) var(--ease), background var(--duration-fast) var(--ease);
+  }
+
+  .meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  time {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .title {
+    font-size: var(--text-lg);
+    transition: color var(--duration-fast) var(--ease);
+  }
+
+  .description {
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+  }
+
+  .article-card:hover .title {
+    color: var(--color-accent);
+  }
+
+  /* card */
+  .card {
+    height: 100%;
+    padding: var(--space-5) var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+  }
+
+  .card:hover {
+    border-color: var(--color-border-strong);
+    background: var(--color-surface-raised);
+  }
+
+  .card .meta {
+    margin-bottom: var(--space-1);
+  }
+
+  /* row */
+  .row {
+    padding-block: var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .row .title {
+    font-size: var(--text-base);
+  }
+</style>

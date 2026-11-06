@@ -1,0 +1,35 @@
+---
+/** 難度標籤：小圓點 + 文字。顏色來自 tokens.css 的 --color-beginner 等。 */
+import { DIFFICULTY_LABEL, type Difficulty } from '../../lib/content';
+
+interface Props {
+  level: Difficulty;
+}
+const { level } = Astro.props;
+---
+
+<span class:list={['badge', level]}>{DIFFICULTY_LABEL[level]}</span>
+
+<style>
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+  }
+
+  .badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-full);
+    background: currentColor;
+  }
+
+  .beginner::before { background: var(--color-beginner); }
+  .intermediate::before { background: var(--color-intermediate); }
+  .advanced::before { background: var(--color-advanced); }
+</style>

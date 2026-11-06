@@ -1,0 +1,130 @@
+---
+/**
+ * 全站頂部導覽列。由 BaseLayout 引入，頁面不要再自己放 header。
+ * 新增主導覽項目：只改下面的 NAV_ITEMS。
+ */
+import Logo from '../ui/Logo.astro';
+import { url } from '../../lib/url';
+
+const NAV_ITEMS = [
+  { href: url('/categories/'), label: 'Categories' },
+  { href: url('/search/'), label: 'Search', shortcut: '/' },
+];
+
+const current = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="container inner">
+    <a href={url('/')} class="brand" aria-label="NEXUS home">
+      <Logo />
+      <span class="wordmark">NEXUS</span>
+    </a>
+
+    <nav aria-label="Main">
+      <ul>
+        {
+          NAV_ITEMS.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={current.startsWith(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+                {item.shortcut && <kbd class="shortcut">{item.shortcut}</kbd>}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // 按「/」：頁面上有搜尋框就聚焦，沒有就前往搜尋頁
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== '/' || event.ctrlKey || event.metaKey || event.altKey) return;
+    const target = event.target as HTMLElement;
+    if (target.closest('input, textarea, [contenteditable="true"]')) return;
+    event.preventDefault();
+    const input = document.querySelector<HTMLInputElement>('[data-search-input]');
+    if (input) input.focus();
+    else {
+      const link = document.querySelector<HTMLAnchorElement>('.site-header a[href$="/search/"]');
+      if (link) window.location.href = link.href;
+    }
+  });
+</script>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    height: var(--header-height);
+    border-bottom: 1px solid var(--color-border);
+    background: rgb(12 14 17 / 0.85);
+    backdrop-filter: blur(8px);
+  }
+
+  .inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .wordmark {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-semibold);
+    letter-spacing: 0.16em;
+    color: var(--color-text);
+  }
+
+  ul {
+    display: flex;
+    gap: var(--space-1);
+    padding: 0;
+    list-style: none;
+  }
+
+  nav a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-text-secondary);
+    transition: color var(--duration-fast) var(--ease), background var(--duration-fast) var(--ease);
+  }
+
+  nav a:hover {
+    color: var(--color-text);
+    background: var(--color-surface-raised);
+  }
+
+  nav a[aria-current='page'] {
+    color: var(--color-text);
+  }
+
+  .shortcut {
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    .shortcut {
+      display: inline-block;
+    }
+  }
+</style>

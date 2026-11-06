@@ -1,0 +1,68 @@
+---
+/**
+ * 所有頁面的最外層版型：<head>、全域樣式、Header、Footer。
+ * 每個頁面都必須使用它（直接使用，或透過 ArticleLayout 間接使用）。
+ */
+import '../styles/global.css';
+import SiteHeader from '../components/layout/SiteHeader.astro';
+import SiteFooter from '../components/layout/SiteFooter.astro';
+import { url } from '../lib/url';
+
+interface Props {
+  /** 頁面標題；會自動加上「 · NEXUS」。首頁不傳。 */
+  title?: string;
+  /** meta description，建議 120 字以內 */
+  description?: string;
+}
+
+const SITE_TAGLINE = 'NEXUS — Computer Science Atlas';
+const DEFAULT_DESCRIPTION =
+  'NEXUS 是一份電腦科學知識圖鑑：資料結構、演算法、計算機結構、程式設計與數學，用一致的格式整理成可以互相連結的知識頁面。';
+
+const { title, description = DEFAULT_DESCRIPTION } = Astro.props;
+const pageTitle = title ? `${title} · NEXUS` : SITE_TAGLINE;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+---
+
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="theme-color" content="#0c0e11" />
+    <link rel="icon" type="image/svg+xml" href={url('/favicon.svg')} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <SiteHeader />
+    <main id="main">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    left: var(--space-4);
+    top: calc(-1 * var(--space-16));
+    z-index: 20;
+    padding: var(--space-2) var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--color-accent);
+    color: var(--color-bg);
+    font-weight: var(--weight-semibold);
+  }
+
+  .skip-link:focus {
+    top: var(--space-2);
+  }
+</style>

@@ -1,0 +1,3 @@
+# 文字檔一律使用 LF 換行，讓 Windows 開發環境與 GitHub Actions（Linux）一致。
+# 只影響本專案，不改變全域的 core.autocrlf 設定。
+* text=auto eol=lf

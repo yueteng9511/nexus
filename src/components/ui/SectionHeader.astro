@@ -1,0 +1,56 @@
+---
+/**
+ * 頁面內的區塊標題：上方 eyebrow + 標題 + 右側選填連結。
+ * 用於首頁各區塊、分類總覽等「一頁多區塊」的情況。
+ */
+interface Props {
+  eyebrow?: string;
+  title: string;
+  /** 右側連結，例如「View all →」 */
+  link?: { href: string; label: string };
+  /** 標題層級，預設 h2 */
+  level?: 'h2' | 'h3';
+  id?: string;
+}
+const { eyebrow, title, link, level = 'h2', id } = Astro.props;
+const Heading = level;
+---
+
+<div class="section-header">
+  <div>
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <Heading id={id} class="title">{title}</Heading>
+  </div>
+  {link && <a class="link" href={link.href}>{link.label}</a>}
+</div>
+
+<style>
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .eyebrow {
+    margin-bottom: var(--space-2);
+  }
+
+  .title {
+    font-size: var(--text-lg);
+  }
+
+  .link {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    transition: color var(--duration-fast) var(--ease);
+  }
+
+  .link:hover {
+    color: var(--color-accent);
+  }
+</style>

@@ -1,0 +1,69 @@
+---
+/**
+ * 文章底部的相關知識。資料來自 frontmatter 的 related（已在 lib/content.ts 驗證存在）。
+ * 沒有相關文章時不輸出任何東西。
+ */
+import ArticleCard from '../ui/ArticleCard.astro';
+import { getCategories, type Article } from '../../lib/content';
+
+interface Props {
+  articles: Article[];
+}
+const { articles } = Astro.props;
+const categories = await getCategories();
+---
+
+{
+  articles.length > 0 && (
+    <section class="related" aria-labelledby="related-topics">
+      <h2 id="related-topics">Related Topics</h2>
+      <ul>
+        {articles.map((article) => (
+          <li>
+            <ArticleCard
+              article={article}
+              category={categories.find((c) => c.id === article.data.category.id)}
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+<style>
+  .related {
+    margin-top: var(--space-16);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border);
+  }
+
+  h2 {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    font-size: var(--text-xl);
+  }
+
+  /* 與 prose.css 的段落編號樣式一致，用箭頭代表「延伸閱讀」 */
+  h2::before {
+    content: '→';
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-accent);
+  }
+
+  ul {
+    display: grid;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 640px) {
+    ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

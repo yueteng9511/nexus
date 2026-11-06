@@ -1,0 +1,57 @@
+---
+/** 全站頁尾。由 BaseLayout 引入。 */
+import { url } from '../../lib/url';
+import { getArticles, getCategories } from '../../lib/content';
+
+const [articles, categories] = await Promise.all([getArticles(), getCategories()]);
+---
+
+<footer class="site-footer">
+  <div class="container inner">
+    <p class="brand">
+      <span class="wordmark">NEXUS</span>
+      <span>Computer Science Atlas</span>
+    </p>
+    <p class="meta">
+      {articles.length} articles · {categories.length} categories ·
+      <a href={url('/categories/')}>Browse all</a>
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: auto;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-3) var(--space-8);
+    padding-block: var(--space-8);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .brand {
+    display: flex;
+    gap: var(--space-3);
+  }
+
+  .wordmark {
+    font-family: var(--font-mono);
+    font-weight: var(--weight-semibold);
+    letter-spacing: 0.16em;
+    color: var(--color-text-secondary);
+  }
+
+  a {
+    color: var(--color-text-secondary);
+  }
+
+  a:hover {
+    color: var(--color-accent);
+  }
+</style>

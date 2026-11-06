@@ -1,0 +1,31 @@
+---
+/**
+ * NEXUS 標誌：三個相連的節點（知識之間的連結）。
+ * 與 public/favicon.svg 是同一個圖形；修改時兩邊要一起改。
+ */
+interface Props {
+  size?: number;
+}
+const { size = 20 } = Astro.props;
+---
+
+<svg
+  class="logo"
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  aria-hidden="true"
+>
+  <path d="M6 17.5 12 6.5l6 11H6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" opacity="0.45"></path>
+  <circle cx="12" cy="6.5" r="2.75" fill="currentColor"></circle>
+  <circle cx="6" cy="17.5" r="2.75" fill="currentColor"></circle>
+  <circle cx="18" cy="17.5" r="2.75" fill="currentColor"></circle>
+</svg>
+
+<style>
+  .logo {
+    color: var(--color-accent);
+    flex-shrink: 0;
+  }
+</style>

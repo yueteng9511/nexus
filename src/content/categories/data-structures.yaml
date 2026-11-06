@@ -1,0 +1,4 @@
+name: Data Structures
+code: DS
+description: 資料在記憶體中的組織方式，以及各種結構在存取、插入、刪除上的取捨。
+order: 1

@@ -1,0 +1,219 @@
+/*
+ * NEXUS Prose Styles
+ * ------------------------------------------------------------------
+ * 套用在 Markdown 轉出來的文章內文（容器 class: .prose）。
+ * Markdown 產生的 HTML 沒有 class，因此只能在這裡用元素選擇器統一樣式。
+ * 由 ArticleLayout 匯入；其他頁面不要使用 .prose。
+ */
+
+.prose {
+  font-size: var(--text-md);
+  line-height: var(--leading-relaxed);
+  color: var(--color-text-secondary);
+  counter-reset: section;
+}
+
+.prose > * + * {
+  margin-top: var(--space-5);
+}
+
+/* ── Section headings（固定段落：01 Overview、02 Intuition…）── */
+.prose h2 {
+  counter-increment: section;
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-top: var(--space-16);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-xl);
+}
+
+.prose h2::before {
+  content: counter(section, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-accent);
+  letter-spacing: 0;
+}
+
+/* 第一個段落緊接在 ArticleHeader 的分隔線下方，不再畫第二條線 */
+.prose > h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.prose h3 {
+  margin-top: var(--space-10);
+  font-size: var(--text-lg);
+}
+
+.prose h4 {
+  margin-top: var(--space-8);
+  font-size: var(--text-base);
+}
+
+.prose h2 + *,
+.prose h3 + *,
+.prose h4 + * {
+  margin-top: var(--space-4);
+}
+
+.prose strong {
+  color: var(--color-text);
+  font-weight: var(--weight-semibold);
+}
+
+.prose a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent-border);
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--duration-fast) var(--ease);
+}
+
+.prose a:hover {
+  text-decoration-color: var(--color-accent);
+}
+
+/* ── Lists ── */
+.prose ul,
+.prose ol {
+  padding-left: var(--space-6);
+}
+
+.prose li + li {
+  margin-top: var(--space-2);
+}
+
+.prose li::marker {
+  color: var(--color-text-muted);
+}
+
+.prose li > ul,
+.prose li > ol {
+  margin-top: var(--space-2);
+}
+
+/* ── Blockquote：當作「重點提示」使用 ── */
+.prose blockquote {
+  padding: var(--space-4) var(--space-5);
+  border-left: 2px solid var(--color-accent);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--color-accent-subtle);
+  color: var(--color-text);
+}
+
+.prose blockquote > * + * {
+  margin-top: var(--space-3);
+}
+
+/* ── Inline code ── */
+.prose :not(pre) > code {
+  padding: 0.1em 0.4em;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-raised);
+  font-size: 0.88em;
+  color: var(--color-text);
+  overflow-wrap: break-word;
+}
+
+/* ── Code blocks（Shiki 輸出 pre.astro-code）── */
+.prose pre {
+  position: relative;
+  padding: var(--space-5);
+  padding-top: var(--space-10);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  overflow-x: auto;
+  tab-size: 4;
+}
+
+/* 左上角語言標籤（Shiki 會加上 data-language） */
+.prose pre[data-language]::before {
+  content: attr(data-language);
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-5);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.prose pre[data-language='plaintext']::before,
+.prose pre[data-language='text']::before {
+  content: 'output';
+}
+
+/* 複製按鈕：由 ArticleLayout 的 script 動態加入每個 pre */
+.prose .copy-button {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  transition: color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease);
+}
+
+.prose .copy-button:hover {
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+}
+
+/* ── Tables ── */
+.prose .table-wrap,
+.prose table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.prose table {
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+  line-height: var(--leading-snug);
+}
+
+.prose th,
+.prose td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.prose td {
+  white-space: normal;
+}
+
+.prose th {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  border-bottom-color: var(--color-border-strong);
+}
+
+.prose td code {
+  white-space: nowrap;
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin-block: var(--space-10);
+}

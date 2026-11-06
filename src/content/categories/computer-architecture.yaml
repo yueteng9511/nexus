@@ -1,0 +1,4 @@
+name: Computer Architecture
+code: ARCH
+description: 程式如何在硬體上執行：CPU、記憶體階層、指令集與組合語言。
+order: 3

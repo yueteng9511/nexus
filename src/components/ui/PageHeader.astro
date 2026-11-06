@@ -1,0 +1,44 @@
+---
+/**
+ * 一般頁面頂部的標題區（分類頁、搜尋頁、404…）。
+ * 文章頁不用這個，改用 article/ArticleHeader。
+ * slot "meta" 可放標題上方的標籤列；預設 slot 放標題下方的補充內容。
+ */
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+}
+const { eyebrow, title, description } = Astro.props;
+---
+
+<header class="page-header">
+  <div class="container">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <slot name="meta" />
+    <h1>{title}</h1>
+    {description && <p class="description">{description}</p>}
+    <slot />
+  </div>
+</header>
+
+<style>
+  .page-header {
+    padding-block: var(--space-16) var(--space-10);
+  }
+
+  .eyebrow {
+    margin-bottom: var(--space-4);
+  }
+
+  h1 {
+    font-size: var(--text-3xl);
+  }
+
+  .description {
+    max-width: var(--width-prose);
+    margin-top: var(--space-4);
+    font-size: var(--text-md);
+    line-height: var(--leading-relaxed);
+  }
+</style>

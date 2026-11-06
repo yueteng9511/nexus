@@ -1,0 +1,186 @@
+---
+/**
+ * 首頁：Hero（品牌＋搜尋）→ Categories → Featured / Recently Added。
+ * 所有列表都由內容資料自動產生，新增文章或分類不需要改這個檔案。
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SearchBox from '../components/search/SearchBox.astro';
+import SectionHeader from '../components/ui/SectionHeader.astro';
+import CategoryCard from '../components/ui/CategoryCard.astro';
+import ArticleCard from '../components/ui/ArticleCard.astro';
+import {
+  getArticles,
+  getArticlesByCategory,
+  getCategories,
+  getFeaturedArticles,
+  getRecentArticles,
+} from '../lib/content';
+import { url } from '../lib/url';
+
+const [articles, categories, featured, recent] = await Promise.all([
+  getArticles(),
+  getCategories(),
+  getFeaturedArticles(3),
+  getRecentArticles(5),
+]);
+const counts = await Promise.all(
+  categories.map(async (c) => (await getArticlesByCategory(c.id)).length),
+);
+const categoryOf = (id: string) => categories.find((c) => c.id === id);
+---
+
+<BaseLayout>
+  <section class="hero">
+    <div class="container">
+      <p class="eyebrow">Computer Science Atlas</p>
+      <h1 class="wordmark">NEXUS</h1>
+      <p class="lead">
+        一份持續擴充的電腦科學知識圖鑑。每個概念都用相同的結構解釋：從直覺、原理、實作到常見錯誤，並連結到相關的知識節點。
+      </p>
+      <div class="search">
+        <SearchBox variant="hero" />
+      </div>
+      <p class="stats">
+        <span><strong>{articles.length}</strong> articles</span>
+        <span><strong>{categories.length}</strong> categories</span>
+        <span>C++ examples</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="container section" aria-labelledby="home-categories">
+    <SectionHeader
+      id="home-categories"
+      eyebrow="Explore"
+      title="Categories"
+      link={{ href: url('/categories/'), label: 'Full index →' }}
+    />
+    <ul class="category-grid">
+      {
+        categories.map((category, i) => (
+          <li>
+            <CategoryCard category={category} count={counts[i]} />
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <div class="container section columns">
+    <section aria-labelledby="home-featured">
+      <SectionHeader id="home-featured" eyebrow="Start here" title="Featured" />
+      <ul class="featured">
+        {
+          featured.map((article) => (
+            <li>
+              <ArticleCard article={article} category={categoryOf(article.data.category.id)} />
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section aria-labelledby="home-recent">
+      <SectionHeader id="home-recent" eyebrow="Changelog" title="Recently Added" />
+      <ul class="recent">
+        {
+          recent.map((article) => (
+            <li>
+              <ArticleCard
+                article={article}
+                category={categoryOf(article.data.category.id)}
+                variant="row"
+                showDate
+              />
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  ul {
+    padding: 0;
+    list-style: none;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    padding-block: var(--space-20) var(--space-16);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .wordmark {
+    margin-top: var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--text-display);
+    font-weight: var(--weight-bold);
+    letter-spacing: 0.08em;
+    line-height: 1;
+  }
+
+  .lead {
+    max-width: 38rem;
+    margin-top: var(--space-6);
+    font-size: var(--text-md);
+    line-height: var(--leading-relaxed);
+  }
+
+  .search {
+    max-width: 38rem;
+    margin-top: var(--space-10);
+  }
+
+  .stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-6);
+    margin-top: var(--space-6);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .stats strong {
+    color: var(--color-text);
+    font-weight: var(--weight-semibold);
+  }
+
+  /* ── Sections ── */
+  .section {
+    padding-block: var(--space-16) 0;
+  }
+
+  .section:last-child {
+    padding-bottom: var(--space-24);
+  }
+
+  .category-grid {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  }
+
+  .columns {
+    display: grid;
+    gap: var(--space-16);
+  }
+
+  .featured {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .recent li:first-child :global(.row) {
+    padding-top: 0;
+  }
+
+  @media (min-width: 960px) {
+    .columns {
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: var(--space-12);
+    }
+  }
+</style>

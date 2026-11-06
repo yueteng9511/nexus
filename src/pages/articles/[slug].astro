@@ -1,0 +1,37 @@
+---
+/**
+ * 文章頁路由：為 src/content/articles/ 裡的每個 .md 自動產生 /articles/<slug>/。
+ * 新增文章「不需要」修改這個檔案。
+ */
+import { render } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import {
+  getArticles,
+  getCategory,
+  getRelatedArticles,
+  validateSections,
+  type Article,
+} from '../../lib/content';
+
+export async function getStaticPaths() {
+  const articles = await getArticles();
+  return articles.map((article) => ({ params: { slug: article.id }, props: { article } }));
+}
+
+interface Props {
+  article: Article;
+}
+
+const { article } = Astro.props;
+const { Content, headings } = await render(article);
+validateSections(article, headings);
+
+const [category, related] = await Promise.all([
+  getCategory(article.data.category.id),
+  getRelatedArticles(article),
+]);
+---
+
+<ArticleLayout article={article} category={category} headings={headings} related={related}>
+  <Content />
+</ArticleLayout>

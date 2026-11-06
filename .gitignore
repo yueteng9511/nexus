@@ -1,0 +1,30 @@
+# build output
+dist/
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
+.DS_Store
+
+# jetbrains setting folder
+.idea/
+
+# C++ 範例檢查的編譯暫存（scripts/check-cpp.mjs）
+.cache/
+
+# Claude Code 的本機預覽設定（個人工具設定，與網站無關）
+.claude/

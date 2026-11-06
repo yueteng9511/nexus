@@ -1,0 +1,114 @@
+---
+/** 分類總覽：每個分類一個區塊，列出底下所有文章（像一本書的目錄）。 */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/ui/PageHeader.astro';
+import CategoryCode from '../../components/ui/CategoryCode.astro';
+import { getArticlesByCategory, getCategories } from '../../lib/content';
+import { articleUrl, categoryUrl } from '../../lib/url';
+
+const categories = await getCategories();
+const groups = await Promise.all(
+  categories.map(async (category) => ({
+    category,
+    articles: await getArticlesByCategory(category.id),
+  })),
+);
+---
+
+<BaseLayout title="Categories" description="依分類瀏覽 NEXUS 的所有電腦科學知識頁面。">
+  <PageHeader
+    eyebrow="Index"
+    title="Categories"
+    description="依主題瀏覽所有知識頁面。每個分類底下的文章依英文名稱排序。"
+  />
+
+  <div class="container groups">
+    {
+      groups.map(({ category, articles }) => (
+        <section class="group" aria-labelledby={`cat-${category.id}`}>
+          <div class="heading">
+            <CategoryCode code={category.data.code} />
+            <h2 id={`cat-${category.id}`}>
+              <a href={categoryUrl(category.id)}>{category.data.name}</a>
+            </h2>
+            <p>{category.data.description}</p>
+          </div>
+          {articles.length > 0 ? (
+            <ul>
+              {articles.map((article) => (
+                <li>
+                  <a href={articleUrl(article.id)}>{article.data.title}</a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="empty">尚無文章</p>
+          )}
+        </section>
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .groups {
+    padding-bottom: var(--space-24);
+  }
+
+  .group {
+    display: grid;
+    gap: var(--space-4) var(--space-12);
+    padding-block: var(--space-8);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .heading h2 {
+    margin-top: var(--space-3);
+    font-size: var(--text-xl);
+  }
+
+  .heading h2 a:hover {
+    color: var(--color-accent);
+  }
+
+  .heading p {
+    margin-top: var(--space-2);
+    font-size: var(--text-sm);
+  }
+
+  ul {
+    display: grid;
+    gap: var(--space-1) var(--space-6);
+    padding: 0;
+    list-style: none;
+    align-content: start;
+  }
+
+  li a {
+    display: block;
+    padding-block: var(--space-1);
+    color: var(--color-text);
+    transition: color var(--duration-fast) var(--ease);
+  }
+
+  li a:hover {
+    color: var(--color-accent);
+  }
+
+  .empty {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  @media (min-width: 640px) {
+    ul {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 960px) {
+    .group {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    }
+  }
+</style>

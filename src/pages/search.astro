@@ -1,0 +1,26 @@
+---
+/** 搜尋頁：支援 /search/?q=關鍵字，可直接分享搜尋結果。 */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/ui/PageHeader.astro';
+import SearchBox from '../components/search/SearchBox.astro';
+---
+
+<BaseLayout title="Search" description="搜尋 NEXUS 的知識名稱、分類與關鍵字。">
+  <PageHeader
+    eyebrow="Search"
+    title="Find a concept"
+    description="可以輸入英文名稱、中文名稱、分類或相關術語。多個關鍵字以空白分隔，結果需同時符合。"
+  />
+  <div class="container">
+    <div class="box">
+      <SearchBox variant="page" suggestions={['array', 'LIFO', '二分搜尋', 'Data Structures', 'O(log n)']} />
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .box {
+    max-width: var(--width-prose);
+    padding-bottom: var(--space-24);
+  }
+</style>

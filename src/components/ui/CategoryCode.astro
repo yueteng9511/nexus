@@ -1,0 +1,31 @@
+---
+/** 分類代號標籤，例如 [DS]。出現在卡片、文章標題區、搜尋結果。 */
+interface Props {
+  code: string;
+  href?: string;
+}
+const { code, href } = Astro.props;
+const Tag = href ? 'a' : 'span';
+---
+
+<Tag class="code" href={href}>{code}</Tag>
+
+<style>
+  .code {
+    display: inline-block;
+    padding: 0.1em 0.5em;
+    border: 1px solid var(--color-accent-border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: var(--tracking-wide);
+    line-height: var(--leading-snug);
+    color: var(--color-accent);
+    white-space: nowrap;
+  }
+
+  a.code:hover {
+    background: var(--color-accent-subtle);
+  }
+</style>

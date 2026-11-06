@@ -1,0 +1,106 @@
+---
+/** 文章頂部：麵包屑、標題、摘要、metadata。由 ArticleLayout 使用。 */
+import CategoryCode from '../ui/CategoryCode.astro';
+import DifficultyBadge from '../ui/DifficultyBadge.astro';
+import { formatDate, readingMinutes, type Article, type Category } from '../../lib/content';
+import { categoryUrl, url } from '../../lib/url';
+
+interface Props {
+  article: Article;
+  category: Category;
+}
+const { article, category } = Astro.props;
+const { title, description, difficulty, publishedAt, updatedAt } = article.data;
+---
+
+<header class="article-header">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <ol>
+      <li><a href={url('/')}>Home</a></li>
+      <li><a href={categoryUrl(category.id)}>{category.data.name}</a></li>
+      <li aria-current="page">{title}</li>
+    </ol>
+  </nav>
+
+  <h1>{title}</h1>
+  <p class="description">{description}</p>
+
+  <dl class="meta">
+    <div>
+      <dt class="visually-hidden">Category</dt>
+      <dd><CategoryCode code={category.data.code} href={categoryUrl(category.id)} /></dd>
+    </div>
+    <div>
+      <dt class="visually-hidden">Difficulty</dt>
+      <dd><DifficultyBadge level={difficulty} /></dd>
+    </div>
+    <div>
+      <dt class="visually-hidden">Reading time</dt>
+      <dd>{readingMinutes(article)} min read</dd>
+    </div>
+    <div>
+      <dt class="visually-hidden">{updatedAt ? 'Updated' : 'Published'}</dt>
+      <dd>
+        <time datetime={formatDate(updatedAt ?? publishedAt)}>
+          {updatedAt ? `Updated ${formatDate(updatedAt)}` : formatDate(publishedAt)}
+        </time>
+      </dd>
+    </div>
+  </dl>
+</header>
+
+<style>
+  .article-header {
+    padding-bottom: var(--space-10);
+    margin-bottom: var(--space-10);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .breadcrumb ol {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: 0;
+    list-style: none;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+
+  .breadcrumb li + li::before {
+    content: '/';
+    margin-right: var(--space-2);
+    color: var(--color-border-strong);
+  }
+
+  .breadcrumb a:hover {
+    color: var(--color-accent);
+  }
+
+  h1 {
+    margin-top: var(--space-6);
+    font-size: var(--text-3xl);
+  }
+
+  .description {
+    margin-top: var(--space-4);
+    font-size: var(--text-lg);
+    line-height: var(--leading-normal);
+    color: var(--color-text-secondary);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-5);
+    margin-top: var(--space-6);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  .meta dd {
+    display: flex;
+    align-items: center;
+  }
+</style>

@@ -1,0 +1,127 @@
+/*
+ * NEXUS Design Tokens
+ * ------------------------------------------------------------------
+ * 全站唯一的視覺數值來源。元件與頁面只能透過 var(--token) 取用，
+ * 不可寫死顏色、字級、間距或圓角（例外規則見 AGENTS.md「Design System」）。
+ *
+ * 斷點（CSS 變數不能用在 @media，因此以註解固定）：
+ *   sm  ≥ 640px   手機橫向 / 小平板
+ *   md  ≥ 960px   平板 / 小筆電（文章目錄在此出現）
+ *   lg  ≥ 1200px  桌面
+ */
+
+:root {
+  color-scheme: dark;
+
+  /* ── Color: surfaces ─────────────────────────────── */
+  --color-bg: #0c0e11;              /* 頁面底色 */
+  --color-surface: #12151a;         /* 卡片、區塊 */
+  --color-surface-raised: #181c22;  /* hover、程式碼區塊、輸入框 */
+  --color-border: #222831;          /* 預設細邊框 */
+  --color-border-strong: #313945;   /* hover / focus 邊框 */
+
+  /* ── Color: text ─────────────────────────────────── */
+  --color-text: #e4e7eb;            /* 主要文字、標題 */
+  --color-text-secondary: #a2a9b4;  /* 內文、描述 */
+  --color-text-muted: #6b7380;      /* 輔助資訊、日期、標籤 */
+
+  /* ── Color: accent（全站唯一強調色）─────────────── */
+  --color-accent: #5ec4b0;
+  --color-accent-hover: #86d6c6;
+  --color-accent-subtle: rgb(94 196 176 / 0.1);
+  --color-accent-border: rgb(94 196 176 / 0.32);
+
+  /* ── Color: semantic（僅用於狀態，不作裝飾）──────── */
+  --color-beginner: #7cc68f;
+  --color-intermediate: #d9b45f;
+  --color-advanced: #e2807d;
+  --color-warning: #d9b45f;
+  --color-warning-subtle: rgb(217 180 95 / 0.08);
+
+  /* ── Code highlighting（Shiki css-variables theme）── */
+  --astro-code-foreground: #d4d8de;
+  --astro-code-background: var(--color-surface-raised);
+  --astro-code-token-comment: #6b7380;
+  --astro-code-token-keyword: #c49bf0;
+  --astro-code-token-string: #9fd08b;
+  --astro-code-token-string-expression: #9fd08b;
+  --astro-code-token-constant: #e7a66c;
+  --astro-code-token-function: #7cb6f2;
+  --astro-code-token-parameter: #e4e7eb;
+  --astro-code-token-punctuation: #8d95a1;
+  --astro-code-token-link: var(--color-accent);
+
+  /* ── Typography ──────────────────────────────────── */
+  --font-sans: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', 'PingFang TC',
+    'Microsoft JhengHei', 'Noto Sans TC', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'Cascadia Code', Consolas, monospace;
+
+  --text-xs: 0.75rem;     /* 12px  eyebrow、標籤 */
+  --text-sm: 0.875rem;    /* 14px  輔助資訊、程式碼 */
+  --text-base: 1rem;      /* 16px  UI 文字 */
+  --text-md: 1.0625rem;   /* 17px  文章內文 */
+  --text-lg: 1.25rem;     /* 20px  卡片標題 */
+  --text-xl: 1.5rem;      /* 24px  文章 h2 */
+  --text-2xl: 2rem;       /* 32px  頁面標題（手機） */
+  --text-3xl: clamp(2rem, 1.4rem + 2.6vw, 3rem);       /* 頁面標題 */
+  --text-display: clamp(2.75rem, 1.6rem + 5vw, 5rem);  /* 首頁品牌字 */
+
+  --leading-tight: 1.2;
+  --leading-snug: 1.4;
+  --leading-normal: 1.6;
+  --leading-relaxed: 1.8;   /* 中文內文 */
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --tracking-tight: -0.02em;
+  --tracking-wide: 0.08em;  /* 全大寫 eyebrow */
+
+  /* ── Spacing（4px 基準）──────────────────────────── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* ── Radius ──────────────────────────────────────── */
+  --radius-sm: 4px;    /* 標籤、inline code */
+  --radius-md: 8px;    /* 按鈕、輸入框、程式碼區塊 */
+  --radius-lg: 12px;   /* 卡片 */
+  --radius-full: 999px;
+
+  /* ── Layout ──────────────────────────────────────── */
+  --width-content: 72rem;   /* 一般頁面最大寬度 */
+  --width-prose: 44rem;     /* 文章內文最大寬度 */
+  --width-toc: 14rem;       /* 文章目錄寬度 */
+  --gutter: var(--space-4); /* 頁面左右留白（手機） */
+  --header-height: 3.5rem;
+
+  /* ── Motion ──────────────────────────────────────── */
+  --duration-fast: 120ms;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ── Elevation（只用於浮層，卡片不用陰影）────────── */
+  --shadow-overlay: 0 12px 32px rgb(0 0 0 / 0.45);
+}
+
+@media (min-width: 640px) {
+  :root {
+    --gutter: var(--space-6);
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    --gutter: var(--space-8);
+  }
+}

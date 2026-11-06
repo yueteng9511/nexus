@@ -1,0 +1,101 @@
+---
+/**
+ * 文章目錄：列出 h2 段落（＋ Related Topics）。捲動時標示目前段落。
+ * ArticleLayout 會放兩份：桌面版側欄、手機版可展開的 <details>。
+ */
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+  /** 是否在最後加上 Related Topics 連結 */
+  hasRelated?: boolean;
+}
+const { headings, hasRelated = false } = Astro.props;
+
+const items = headings
+  .filter((h) => h.depth === 2)
+  .map((h) => ({ slug: h.slug, text: h.text }));
+if (hasRelated) items.push({ slug: 'related-topics', text: 'Related Topics' });
+---
+
+<nav class="toc" aria-label="On this page">
+  <ol>
+    {
+      items.map((item, i) => (
+        <li>
+          <a href={`#${item.slug}`} data-toc-link={item.slug}>
+            <span class="index">{String(i + 1).padStart(2, '0')}</span>
+            {item.text}
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+</nav>
+
+<script>
+  // 標示目前閱讀到的段落：取「最後一個已經捲過畫面上緣」的 h2
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]')];
+  const ids = [...new Set(links.map((link) => link.dataset.tocLink!))];
+  const targets = ids
+    .map((id) => document.getElementById(id))
+    .filter((el): el is HTMLElement => el !== null);
+
+  function updateActive() {
+    const offset = window.innerHeight * 0.25;
+    let active = targets[0]?.id;
+    for (const target of targets) {
+      if (target.getBoundingClientRect().top <= offset) active = target.id;
+    }
+    for (const link of links) {
+      link.toggleAttribute('data-active', link.dataset.tocLink === active);
+    }
+  }
+
+  if (targets.length > 0) {
+    updateActive();
+    window.addEventListener('scroll', updateActive, { passive: true });
+  }
+</script>
+
+<style>
+  ol {
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    display: flex;
+    gap: var(--space-3);
+    padding: var(--space-1) 0 var(--space-1) var(--space-3);
+    border-left: 1px solid var(--color-border);
+    font-size: var(--text-sm);
+    line-height: var(--leading-snug);
+    color: var(--color-text-muted);
+    transition: color var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease);
+  }
+
+  li + li a {
+    padding-top: var(--space-2);
+  }
+
+  .index {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: inherit;
+    color: var(--color-border-strong);
+  }
+
+  a:hover {
+    color: var(--color-text);
+  }
+
+  a[data-active] {
+    border-left-color: var(--color-accent);
+    color: var(--color-text);
+  }
+
+  a[data-active] .index {
+    color: var(--color-accent);
+  }
+</style>
